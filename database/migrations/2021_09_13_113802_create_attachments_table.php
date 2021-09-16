@@ -18,6 +18,12 @@ class CreateAttachmentsTable extends Migration
             $table->string('attachment_reference');
             $table->timestamps();
         });
+        DB::table('attachments')->insert(['attachment_reference' => '[reference to default user avatar]']);
+        DB::table('attachments')->insert(['attachment_reference' => '[reference to default admin avatar]']);
+        DB::table('attachments')->insert(['attachment_reference' => '[reference to default moderator avatar]']);
+        DB::table('attachments')->insert(['attachment_reference' => '[reference to default creator avatar]']);
+
+
     }
 
     /**

@@ -22,12 +22,12 @@ class CreateUsersTable extends Migration
                 $table->string('username');
                 $table->string('password');
                 $table->text('about_me')->nullable();
-                $table->integer('karma');
+                $table->integer('karma')->nullable();
                 $table->bigInteger('avatar')->unsigned()->nullable();
-                $table->tinyInteger('is_banned');
+                $table->tinyInteger('is_banned')->nullable();
                 $table->bigInteger('role')->unsigned();
                 $table->date('date_of_birth')->nullable();
-                $table->timestamp('last_online');
+                $table->timestamp('last_online')->nullable();
                 $table->timestamp('email_verified_at')->nullable();
                 $table->timestamps();
 
