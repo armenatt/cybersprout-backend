@@ -57,9 +57,8 @@ class AuthController extends Controller
         } catch (\Exception $exception) {
             return response([
                 'message' => $exception->getMessage()
-            ]);
+            ], 400);
         }
-
 
         return response([
             'message' => 'Invalid Credentials'
