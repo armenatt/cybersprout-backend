@@ -25,3 +25,4 @@ Route::prefix('auth')->group(function () {
     Route::post('/forgetpassword', [ForgetController::class, 'forget']);
     Route::post('/resetpassword', [ResetController::class, 'reset']);
 });
+
