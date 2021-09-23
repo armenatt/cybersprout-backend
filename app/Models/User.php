@@ -36,6 +36,28 @@ use Laravel\Passport\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRememberToken($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property string|null $first_name
+ * @property string|null $last_name
+ * @property string $username
+ * @property string|null $about_me
+ * @property int|null $karma
+ * @property int|null $avatar
+ * @property int|null $is_banned
+ * @property int $role
+ * @property string|null $date_of_birth
+ * @property string|null $last_online
+ * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
+ * @property-read int|null $clients_count
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereAboutMe($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereAvatar($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereDateOfBirth($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereFirstName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereIsBanned($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereKarma($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLastName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereLastOnline($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
  */
 class User extends Authenticatable
 {
