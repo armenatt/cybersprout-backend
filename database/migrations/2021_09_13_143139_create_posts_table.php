@@ -18,13 +18,12 @@ class CreatePostsTable extends Migration
                 $table->id();
                 $table->bigInteger('author_id')->unsigned();
                 $table->string('title');
-                $table->string('source_link');
+                $table->string('source_link')->nullable();
                 $table->tinyInteger('is_updated');
-                $table->integer('tags');
                 $table->integer('view_count');
                 $table->bigInteger('type')->unsigned();
                 $table->bigInteger('game')->unsigned();
-                $table->longText('content');
+                $table->longText('text');
                 $table->integer('like_count');
                 $table->integer('dislike_count');
                 $table->timestamps();

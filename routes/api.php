@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ForgetController;
+use App\Http\Controllers\PostController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\CheckRoleMiddleware;
@@ -27,15 +28,20 @@ Route::prefix('auth')->group(function () {
     Route::post('/resetpassword', [ResetController::class, 'reset']);
 });
 
+Route::prefix('posts')->group(function () {
+    // The route below retrieves the 25 latest posts
+    Route::get('/get', [PostController::class, 'index']);
+    Route::get();
 
-Route::prefix('posts')->middleware('auth:api')->group(function () {
+
+    Route::middleware('auth:api')->group(function () {
 // Select role by using the CheckRole:role middleware
 // Example: CheckRole:admin
 // List of possible roles: admin, user, moderator, creator
-//    Route::middleware('CheckRole:moderator')->group(function () {
-//        Route::get('/getposts', function () {
-//            return auth()->user()->role;
-//        });
-//    });
+
+        Route::middleware('CheckRole:creator')->group(function () {
+            Route::post('/create', [PostController::class, 'store']);
+        });
+    });
 
 });
