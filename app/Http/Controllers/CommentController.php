@@ -98,10 +98,10 @@ class CommentController extends Controller
                 'message' => $exception->getMessage()
             ], 400);
         }
+
         return response([
             'message' => 'success',
             'reply_count' => $replyCount,
-            'parent_comment_id' => $parentCommentId,
             'replies' => $replies
         ]);
     }
