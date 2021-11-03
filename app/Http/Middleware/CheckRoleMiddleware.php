@@ -20,8 +20,8 @@ class CheckRoleMiddleware
         $roles = [
             'user' => [2, 1],
             'admin' => [2],
-            'moderator' => [2, 3, 1],
-            'creator' => [2, 4, 1]
+            'moderator' => [2, 3],
+            'creator' => [2, 4]
         ];
 
         if (!in_array(Auth::user()->role, $roles[$role])) {
