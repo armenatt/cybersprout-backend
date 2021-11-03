@@ -41,10 +41,17 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property string $text
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereText($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
  */
 class Post extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

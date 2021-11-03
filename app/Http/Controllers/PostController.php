@@ -3,16 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
+use App\Models\Comment;
 use App\Models\Post;
 use Exception;
-use Illuminate\Http\Request;
 
 class PostController extends Controller
 {
+    // get titles with the number of comments
     public function index()
     {
-        $latestNews = Post::orderBy('created_at', 'desc')->simplePaginate(25);
-        return $latestNews;
+        $titles = Post::select(['id', 'title', 'created_at'])->orderBy('created_at')->withCount('comments')->get();
+
+        return response([
+            'message' => 'Success',
+            'titles' => $titles
+        ], 200);
+    }
+
+    public function showById($id)
+    {
+
+        return response([
+                'message' => 'success',
+                'post' => Post::where('id', $id)->get()
+            ]
+        );
     }
 
     public function store(PostRequest $request)
@@ -28,7 +43,7 @@ class PostController extends Controller
                 'text' => $request->text,
                 'like_count' => 0,
                 'dislike_count' => 0,
-                'view_count' => 1
+                'view_count' => 0
             ]);
             return response([
                 'message' => 'Success',

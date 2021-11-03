@@ -20,7 +20,7 @@ class CreateCommentsTable extends Migration
                 $table->integer('like_count');
                 $table->integer('dislike_count');
                 $table->text('text');
-                $table->bigInteger('attachment')->unsigned();
+                $table->bigInteger('attachment')->unsigned()->nullable();
                 $table->bigInteger('post_id')->unsigned();
                 $table->tinyInteger('is_updated');
                 $table->tinyInteger('is_hidden');

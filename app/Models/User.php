@@ -58,6 +58,8 @@ use Laravel\Passport\HasApiTokens;
  * @method static \Illuminate\Database\Eloquent\Builder|User whereLastOnline($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereRole($value)
  * @method static \Illuminate\Database\Eloquent\Builder|User whereUsername($value)
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Comment[] $comments
+ * @property-read int|null $comments_count
  */
 class User extends Authenticatable
 {
@@ -89,5 +91,9 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
+    public function comments()
+    {
+        return $this->hasMany(Comment::class);
+    }
 
 }
