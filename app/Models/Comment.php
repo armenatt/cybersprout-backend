@@ -36,6 +36,8 @@ use Illuminate\Database\Eloquent\Model;
  * @method static \Illuminate\Database\Eloquent\Builder|Comment whereText($value)
  * @method static \Illuminate\Database\Eloquent\Builder|Comment whereUpdatedAt($value)
  * @mixin \Eloquent
+ * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
+ * @property-read int|null $reactions_count
  */
 class Comment extends Model
 {
@@ -57,6 +59,11 @@ class Comment extends Model
     public function replies()
     {
         $this->hasMany(ParentChildComment::class, 'parent_commend_id');
+    }
+
+    public function reactions()
+    {
+        return $this->hasMany(CommentReaction::class);
     }
 
 }
