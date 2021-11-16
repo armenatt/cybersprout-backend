@@ -61,7 +61,7 @@ class CommentController extends Controller
                 ]);
             } else {
                 return response([
-                    'message' => 'Commentg doesn\'t exist',
+                    'message' => 'Reply failed: parent comment doesn\'t exist',
 
                 ], 404);
             }
@@ -101,7 +101,9 @@ class CommentController extends Controller
                 ->join('parent_child_comments', 'parent_child_comments.child_comment_id', '=', 'comments.id')
                 ->where('parent_child_comments.parent_comment_id', $parentCommentId)->get();
             $replyCount = $replies->count();
-
+            if ($replyCount == 0) return response([
+                'message' => 'no replies'
+            ]);
         } catch (\Exception $exception) {
             return response([
                 'message' => $exception->getMessage()
