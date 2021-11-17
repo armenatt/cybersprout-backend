@@ -6,7 +6,6 @@ use App\Http\Requests\CommentRequest;
 use App\Models\Comment;
 use App\Models\ParentChildComment;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\Console\Input\Input;
 
 class CommentController extends Controller
 {
@@ -25,10 +24,6 @@ class CommentController extends Controller
                 'is_hidden' => 0
             ]);
 
-//            ParentChildComment::create([
-//                'parent_comment_id' => $newComment->id,
-//                'child_comment_id' => $newComment->id
-//            ]);
         } catch (\Exception $exception) {
             return response([
                 'message' => $exception->getMessage()
@@ -38,6 +33,22 @@ class CommentController extends Controller
             'message' => 'successfully commented',
             'comment' => $newComment
         ], 200);
+    }
+
+    public function show($postId)
+    {
+        try {
+            $firstLevelComments = Comment::where('post_id', $postId)->limit(25)->get();
+        } catch (\Exception $exception) {
+            return response([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+
+        return response([
+            'message' => 'success',
+            'comments' => $firstLevelComments
+        ]);
     }
 
     public function storeReply(CommentRequest $request, $postId, $parentCommentId)
@@ -78,22 +89,6 @@ class CommentController extends Controller
 
     }
 
-    public function show($postId)
-    {
-        try {
-            $firstLevelComments = Comment::where('post_id', $postId)->limit(25)->get();
-        } catch (\Exception $exception) {
-            return response([
-                'message' => $exception->getMessage()
-            ], 400);
-        }
-
-        return response([
-            'message' => 'success',
-            'comments' => $firstLevelComments
-        ]);
-    }
-
     public function showReplies($postId, $parentCommentId)
     {
         try {
@@ -103,7 +98,7 @@ class CommentController extends Controller
             $replyCount = $replies->count();
             if ($replyCount == 0) return response([
                 'message' => 'no replies'
-            ]);
+            ], 404);
         } catch (\Exception $exception) {
             return response([
                 'message' => $exception->getMessage()
