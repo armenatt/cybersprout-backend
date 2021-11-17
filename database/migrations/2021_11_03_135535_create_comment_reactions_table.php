@@ -18,7 +18,7 @@ class CreateCommentReactionsTable extends Migration
             $table->bigInteger('comment_id')->unsigned();
             $table->tinyInteger('reaction');
 
-            $table->primary(['user_id', 'comment_id']);
+            $table->primary(['user_id', 'comment_id', 'reaction']);
 
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('comment_id')->references('id')->on('comments');

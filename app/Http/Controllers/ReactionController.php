@@ -12,11 +12,10 @@ class ReactionController extends Controller
     public function commentReactionStore(ReactionRequest $request, $commentId)
     {
         try {
-            $reaction = CommentReaction::create([
+            $reaction = \DB::table('comment_reactions')->updateOrInsert([
                 'comment_id' => $commentId,
                 'user_id' => auth()->user()->id,
-                'reaction' => $request->reaction
-            ]);
+            ], ['reaction' => $request->reaction]);
         } catch (\Exception $exception) {
             return response([
                 'message' => $exception->getMessage()
