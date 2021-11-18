@@ -28,4 +28,5 @@ class CommentReaction extends Model
     use HasFactory;
 
     protected $guarded = [];
+
 }

@@ -58,6 +58,7 @@ Route::prefix('/posts')->group(function () {
 
 /* Reaction urls */
 Route::prefix('/reaction')->group(function () {
+    Route::get('/{commentId}', [ReactionController::class, 'commentReactionsShow']);
     Route::middleware('auth:api')->group(function () {
         Route::middleware('CheckRole:user')->group(function () {
             Route::post('/comment/{commentId}', [ReactionController::class, 'commentReactionStore']);
