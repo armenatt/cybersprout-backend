@@ -16,4 +16,7 @@ use Illuminate\Database\Eloquent\Model;
 class PostReaction extends Model
 {
     use HasFactory;
+
+
+    protected $guarded = [];
 }

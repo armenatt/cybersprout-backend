@@ -58,12 +58,27 @@ Route::prefix('/posts')->group(function () {
 
 /* Reaction urls */
 Route::prefix('/reaction')->group(function () {
-    Route::get('/{commentId}', [ReactionController::class, 'commentReactionsShow']);
-    Route::middleware('auth:api')->group(function () {
-        Route::middleware('CheckRole:user')->group(function () {
-            Route::post('/comment/{commentId}', [ReactionController::class, 'commentReactionStore']);
-
+    //comments
+    Route::prefix('/comment')->group(function () {
+        Route::get('/{commentId}', [ReactionController::class, 'commentReactionsShow']);
+        Route::middleware('auth:api')->group(function () {
+            Route::middleware('CheckRole:user')->group(function () {
+                Route::delete('/{entityId}', [ReactionController::class, 'reactionDestroy']);
+                Route::post('/{commentId}', [ReactionController::class, 'commentReactionStore']);
+            });
         });
     });
+
+    //posts
+    Route::prefix('/post')->group(function () {
+        Route::get('/{postId}', [ReactionController::class, 'postReactionsShow']);
+        Route::middleware('auth:api')->group(function () {
+            Route::middleware('CheckRole:user')->group(function () {
+                Route::delete('/{entityId}', [ReactionController::class, 'reactionDestroy']);
+                Route::post('/{postId}', [ReactionController::class, 'postReactionStore']);
+            });
+        });
+    });
+
 });
 
