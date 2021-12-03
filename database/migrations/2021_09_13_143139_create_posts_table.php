@@ -22,7 +22,8 @@ class CreatePostsTable extends Migration
                 $table->tinyInteger('is_updated');
                 $table->integer('view_count');
                 $table->bigInteger('type')->unsigned();
-                $table->bigInteger('game')->unsigned();
+                $table->bigInteger('game')->nullable()->unsigned();
+                $table->bigInteger('attachment')->nullable()->unsigned();
                 $table->longText('text');
                 $table->integer('like_count');
                 $table->integer('dislike_count');
@@ -33,6 +34,8 @@ class CreatePostsTable extends Migration
             $table->foreign('author_id')->references('id')->on('users');
             $table->foreign('type')->references('id')->on('post_type');
             $table->foreign('game')->references('id')->on('games');
+            $table->foreign('attachment')->references('id')->on('attachments');
+
         });
 
     }

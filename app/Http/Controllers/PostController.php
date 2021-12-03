@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostRequest;
+use App\Http\Requests\QuckNewsRequest;
 use App\Models\Comment;
 use App\Models\Post;
 use Exception;
@@ -45,16 +46,62 @@ class PostController extends Controller
                 'dislike_count' => 0,
                 'view_count' => 0
             ]);
-            return response([
-                'message' => 'Success',
-                'post' => $newPost,
 
-            ], 200);
         } catch (Exception $exception) {
             return response([
                 'message' => $exception->getMessage()
             ], 400);
         }
+        return response([
+            'message' => 'Success',
+            'post' => $newPost,
 
+        ], 200);
+
+    }
+
+    public function quickNewsStore(QuckNewsRequest $request)
+    {
+        try {
+            $quickNews = Post::create([
+                'author_id' => auth()->user()->id,
+                'is_updated' => 0,
+                'view_count' => 0,
+                'like_count' => 0,
+                'dislike_count' => 0,
+                'title' => $request->title,
+                'text' => $request->text,
+                'type' => 1,
+                'attachment' => $request->attachment
+            ]);
+        } catch (Exception $exception) {
+            return response([
+                'message' => $exception->getMessage(),
+            ], 400);
+        }
+        return response([
+            'message' => 'successfully posted a quicknews',
+            'quick_news' => $quickNews
+        ]);
+    }
+
+    public function quickNewsIndex()
+    {
+        try {
+            $quickNews = Post::select(['title', 'text', 'attachment_reference'])
+                ->leftJoin('attachments', 'posts.attachment', '=', 'attachments.id')
+                ->where('type', 1)
+                ->limit(10)
+                ->orderByDesc('posts.created_at')
+                ->get();
+        } catch (Exception $exception) {
+            return response([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
+        return response([
+            'message' => 'success',
+            'quick_news' => $quickNews
+        ]);
     }
 }

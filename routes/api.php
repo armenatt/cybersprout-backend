@@ -16,7 +16,7 @@ Route::prefix('auth')->group(function () {
     Route::post('/forgetpassword', [ForgetController::class, 'forget']);
     Route::post('/resetpassword', [ResetController::class, 'reset']);
 });
-
+// articles
 Route::prefix('posts')->group(function () {
     // retrieves the 25 latest posts
     Route::get('/get', [PostController::class, 'index']);
@@ -32,6 +32,13 @@ Route::prefix('posts')->group(function () {
         Route::middleware('CheckRole:creator')->group(function () {
             Route::post('/create', [PostController::class, 'store']);
         });
+    });
+});
+//quick news
+Route::prefix('quicknews')->group(function () {
+    Route::get('/', [PostController::class, 'quickNewsIndex']);
+    Route::middleware('auth:api, CheckRole:creator')->group(function () {
+        Route::post('/create', [PostController::class, 'quickNewsStore']);
     });
 });
 
