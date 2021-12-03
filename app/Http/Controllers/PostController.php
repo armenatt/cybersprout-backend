@@ -21,12 +21,24 @@ class PostController extends Controller
         ], 200);
     }
 
-    public function showById($id)
+    public function show($id)
     {
+        try {
+            if (!Post::where('id', $id)->exists()) {
+                return response([
+                    'message' => 'post doesn\'t exist'
+                ], 404);
+            }
+            $post = Post::where('id', $id)->get();
+        } catch (Exception $exception) {
+            return response([
+                'message' => $exception->getMessage()
+            ], 400);
+        }
 
         return response([
                 'message' => 'success',
-                'post' => Post::where('id', $id)->get()
+                'post' => $post
             ]
         );
     }

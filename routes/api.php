@@ -19,9 +19,9 @@ Route::prefix('auth')->group(function () {
 // articles
 Route::prefix('posts')->group(function () {
     // retrieves the 25 latest posts
-    Route::get('/get', [PostController::class, 'index']);
+    Route::get('/', [PostController::class, 'index']);
     // get the post by its id
-    Route::get('/get/{id}', [PostController::class, 'showById']);
+    Route::get('/{id}', [PostController::class, 'show']);
 
 
     Route::middleware('auth:api')->group(function () {
