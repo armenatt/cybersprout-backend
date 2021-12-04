@@ -97,10 +97,12 @@ class PostController extends Controller
         ]);
     }
 
+    //this gets all the articles with type 1 (quicknews)
     public function quickNewsIndex()
     {
         try {
-            $quickNews = Post::select(['title', 'text', 'attachment_reference'])
+            $quickNews = Post::with(['reactions'])
+                ->select(['posts.id', 'title', 'text', 'attachment_reference'])
                 ->leftJoin('attachments', 'posts.attachment', '=', 'attachments.id')
                 ->where('type', 1)
                 ->limit(10)

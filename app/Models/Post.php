@@ -45,6 +45,9 @@ use Illuminate\Database\Eloquent\Model;
  * @property-read int|null $comments_count
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
  * @property-read int|null $reactions_count
+ * @property int|null $attachment
+ * @method static \Database\Factories\PostFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Post whereAttachment($value)
  */
 class Post extends Model
 {
@@ -59,6 +62,6 @@ class Post extends Model
 
     public function reactions()
     {
-        return $this->hasMany(PostReaction::class);
+        return $this->hasMany(PostReaction::class, 'post_id');
     }
 }
