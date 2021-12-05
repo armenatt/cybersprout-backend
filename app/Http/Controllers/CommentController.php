@@ -38,7 +38,11 @@ class CommentController extends Controller
     public function show($postId)
     {
         try {
-            $firstLevelComments = Comment::where('post_id', $postId)->limit(25)->get();
+            // $comments = Comment::where('post_id', $postId)->limit(25)->get();
+            $comments = Comment::with('childrenRecursive')
+                ->where('post_id', $postId)
+                ->whereNull('parent_id')
+                ->get();
         } catch (\Exception $exception) {
             return response([
                 'message' => $exception->getMessage()
@@ -47,7 +51,7 @@ class CommentController extends Controller
 
         return response([
             'message' => 'success',
-            'comments' => $firstLevelComments
+            'comments' => $comments
         ]);
     }
 
