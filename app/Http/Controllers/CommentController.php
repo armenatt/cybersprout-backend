@@ -42,6 +42,7 @@ class CommentController extends Controller
             $comments = Comment::with('childrenRecursive')
                 ->where('post_id', $postId)
                 ->whereNull('parent_id')
+                ->limit(15)
                 ->get();
         } catch (\Exception $exception) {
             return response([
@@ -61,6 +62,7 @@ class CommentController extends Controller
             if (Comment::where('id', $parentCommentId)->exists()) {
                 $newReply = Comment::create([
                     'author_id' => auth()->user()->id,
+                    'parent_id' => $parentCommentId,
                     'like_count' => 0,
                     'dislike_count' => 0,
                     'text' => $request->text,
@@ -70,10 +72,10 @@ class CommentController extends Controller
                     'is_hidden' => 0
                 ]);
 
-                ParentChildComment::create([
-                    'parent_comment_id' => $parentCommentId,
-                    'child_comment_id' => $newReply->id
-                ]);
+//                ParentChildComment::create([
+//                    'parent_comment_id' => $parentCommentId,
+//                    'child_comment_id' => $newReply->id
+//                ]);
             } else {
                 return response([
                     'message' => 'Reply failed: parent comment doesn\'t exist',
@@ -93,28 +95,28 @@ class CommentController extends Controller
 
     }
 
-    public function showReplies($postId, $parentCommentId)
-    {
-        try {
-            $replies = DB::table('comments')
-                ->join('parent_child_comments', 'parent_child_comments.child_comment_id', '=', 'comments.id')
-                ->where('parent_child_comments.parent_comment_id', $parentCommentId)->get();
-            $replyCount = $replies->count();
-            if ($replyCount == 0) return response([
-                'message' => 'no replies'
-            ], 404);
-        } catch (\Exception $exception) {
-            return response([
-                'message' => $exception->getMessage()
-            ], 400);
-        }
-
-        return response([
-            'message' => 'success',
-            'reply_count' => $replyCount,
-            'replies' => $replies
-        ]);
-    }
+//    public function showReplies($postId, $parentCommentId)
+//    {
+//        try {
+//            $replies = DB::table('comments')
+//                ->join('parent_child_comments', 'parent_child_comments.child_comment_id', '=', 'comments.id')
+//                ->where('parent_child_comments.parent_comment_id', $parentCommentId)->get();
+//            $replyCount = $replies->count();
+//            if ($replyCount == 0) return response([
+//                'message' => 'no replies'
+//            ], 404);
+//        } catch (\Exception $exception) {
+//            return response([
+//                'message' => $exception->getMessage()
+//            ], 400);
+//        }
+//
+//        return response([
+//            'message' => 'success',
+//            'reply_count' => $replyCount,
+//            'replies' => $replies
+//        ]);
+//    }
 
 
 }

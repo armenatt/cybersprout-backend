@@ -16,6 +16,7 @@ class CreateCommentsTable extends Migration
         if (!Schema::hasTable('comments')) {
             Schema::create('comments', function (Blueprint $table) {
                 $table->id();
+                $table->bigInteger('parent_id')->nullable()->unsigned();
                 $table->bigInteger('author_id')->unsigned();
                 $table->integer('like_count');
                 $table->integer('dislike_count');
@@ -32,7 +33,9 @@ class CreateCommentsTable extends Migration
             $table->foreign('author_id')->references('id')->on('users');
             $table->foreign('attachment')->references('id')->on('attachments');
             $table->foreign('post_id')->references('id')->on('posts');
+            $table->foreign('parent_id')->references('id')->on('comments');
         });
+
 
     }
 
