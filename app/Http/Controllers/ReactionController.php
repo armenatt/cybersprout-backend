@@ -35,11 +35,10 @@ class ReactionController extends Controller
     {
         try {
             if (\DB::table('comments')->where('id', $commentId)->exists()) {
-                $commentReactions = CommentReaction::where('comment_id', $commentId)->limit(10)->get();
+                $commentReactions = CommentReaction::select(['user_id', 'reaction'])->where('comment_id', $commentId)->get();
                 $reactionsCount = $commentReactions->count();
                 $likes = $commentReactions->where('reaction', 1)->count();
                 $dislikes = $commentReactions->where('reaction', 0)->count();
-
 
             } else {
                 return response([
