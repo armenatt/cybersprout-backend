@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ForgetController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\ReactionController;
 use App\Http\Controllers\ResetController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -53,6 +54,34 @@ Route::prefix('/posts')->group(function () {
         Route::middleware('CheckRole:user')->group(function () {
             Route::post('/{postId}/comments', [CommentController::class, 'store']);
             Route::post('/{postId}/comments/{parentCommentId}/reply', [CommentController::class, 'storeReply']);
+            // update
+            // delete
+        });
+    });
+
+});
+
+/* Reaction urls */
+Route::prefix('/reaction')->group(function () {
+    //comments
+    Route::prefix('/comment')->group(function () {
+        Route::get('/{commentId}', [ReactionController::class, 'commentReactionsShow']);
+        Route::middleware('auth:api')->group(function () {
+            Route::middleware('CheckRole:user')->group(function () {
+                Route::delete('/{entityId}', [ReactionController::class, 'reactionDestroy']);
+                Route::post('/{commentId}', [ReactionController::class, 'commentReactionStore']);
+            });
+        });
+    });
+
+    //posts
+    Route::prefix('/post')->group(function () {
+        Route::get('/{postId}', [ReactionController::class, 'postReactionsShow']);
+        Route::middleware('auth:api')->group(function () {
+            Route::middleware('CheckRole:user')->group(function () {
+                Route::delete('/{entityId}', [ReactionController::class, 'reactionDestroy']);
+                Route::post('/{postId}', [ReactionController::class, 'postReactionStore']);
+            });
         });
     });
 
