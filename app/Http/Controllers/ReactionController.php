@@ -37,6 +37,10 @@ class ReactionController extends Controller
             if (\DB::table('comments')->where('id', $commentId)->exists()) {
                 $commentReactions = CommentReaction::where('comment_id', $commentId)->limit(10)->get();
                 $reactionsCount = $commentReactions->count();
+                $likes = $commentReactions->where('reaction', 1)->count();
+                $dislikes = $commentReactions->where('reaction', 0)->count();
+
+
             } else {
                 return response([
                     'message' => 'comment doesn\'t exists'
@@ -53,6 +57,8 @@ class ReactionController extends Controller
         return response([
             'message' => 'success',
             'number_of_reactions' => $reactionsCount,
+            'likes' => $likes,
+            'dislikes' => $dislikes,
             'reactions' => $commentReactions
         ]);
     }
