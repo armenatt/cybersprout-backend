@@ -18,9 +18,9 @@ class CreatePostTypeTable extends Migration
             $table->string('type');
             $table->tinyText('description');
         });
-        DB::table('post_type')->insert(['type' => 'QuickNews']);
-        DB::table('post_type')->insert(['type' => 'Article']);
-        DB::table('post_type')->insert(['type' => 'Match']);
+        DB::table('post_type')->insert(['type' => 'QuickNews', 'description' => 'blabla']);
+        DB::table('post_type')->insert(['type' => 'Article', 'description' => 'blabla']);
+        DB::table('post_type')->insert(['type' => 'Match', 'description' => 'blabla']);
 
     }
 

@@ -16,7 +16,7 @@ class CreateCommentsTable extends Migration
         if (!Schema::hasTable('comments')) {
             Schema::create('comments', function (Blueprint $table) {
                 $table->id();
-                $table->bigInteger('parent_id')->nullable()->unsigned();
+                $table->bigInteger('parent_id')->unsigned()->nullable();
                 $table->bigInteger('author_id')->unsigned();
                 $table->integer('like_count');
                 $table->integer('dislike_count');

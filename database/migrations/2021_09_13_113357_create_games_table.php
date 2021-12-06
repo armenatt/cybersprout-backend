@@ -19,6 +19,8 @@ class CreateGamesTable extends Migration
             $table->integer('thumbnail');
 
         });
+
+        DB::table('games')->insert(['game' => 'No game', 'thumbnail' => '123']);
     }
 
     /**
