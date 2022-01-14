@@ -11,7 +11,7 @@ pipelines:
       - step:
           name: 'Build and Test'
           script:
-            - echo "Your build and test goes here..."
+            - php artisan serve
       - step:
           name: 'Security scan'
           script:
