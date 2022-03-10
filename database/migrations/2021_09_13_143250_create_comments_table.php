@@ -18,8 +18,8 @@ class CreateCommentsTable extends Migration
                 $table->id();
                 $table->bigInteger('parent_id')->unsigned()->nullable();
                 $table->bigInteger('author_id')->unsigned();
-                $table->integer('like_count');
-                $table->integer('dislike_count');
+                $table->integer('like_count' )->default(0);
+                $table->integer('dislike_count')->default(0);
                 $table->text('text');
                 $table->bigInteger('attachment')->unsigned()->nullable();
                 $table->bigInteger('post_id')->unsigned();

@@ -38,6 +38,14 @@ use Illuminate\Database\Eloquent\Model;
  * @mixin \Eloquent
  * @property-read \Illuminate\Database\Eloquent\Collection|\App\Models\Reaction[] $reactions
  * @property-read int|null $reactions_count
+ * @property int|null $parent_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|Comment[] $children
+ * @property-read int|null $children_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|Comment[] $replies
+ * @property-read int|null $replies_count
+ * @method static \Database\Factories\CommentFactory factory(...$parameters)
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment firstLevel()
+ * @method static \Illuminate\Database\Eloquent\Builder|Comment whereParentId($value)
  */
 class Comment extends Model
 {
@@ -58,7 +66,12 @@ class Comment extends Model
 
     public function replies()
     {
-        $this->hasMany(ParentChildComment::class, 'parent_commend_id');
+//        return $this->hasMany(ParentChildComment::class, 'parent_commend_id');
+        return $this->hasMany(static::class, 'parent_id');
+    }
+    public function scopeFirstLevel($query)
+    {
+        return $query->whereNull('parent_id');
     }
 
     public function reactions()

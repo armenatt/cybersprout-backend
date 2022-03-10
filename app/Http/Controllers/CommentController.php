@@ -32,18 +32,17 @@ class CommentController extends Controller
         return response([
             'message' => 'successfully commented',
             'comment' => $newComment
-        ], 200);
+        ]);
     }
 
-    public function show($postId)
+    public function index($postId)
     {
         try {
             // $comments = Comment::where('post_id', $postId)->limit(25)->get();
             $comments = Comment::with('childrenRecursive')
                 ->where('post_id', $postId)
                 ->whereNull('parent_id')
-                ->limit(15)
-                ->get();
+                ->paginate();
         } catch (\Exception $exception) {
             return response([
                 'message' => $exception->getMessage()
@@ -56,7 +55,7 @@ class CommentController extends Controller
         ]);
     }
 
-    public function storeReply(CommentRequest $request, $postId, $parentCommentId)
+    public function storeReply(CommentRequest $request, int $postId, int $parentCommentId)
     {
         try {
             if (Comment::where('id', $parentCommentId)->exists()) {

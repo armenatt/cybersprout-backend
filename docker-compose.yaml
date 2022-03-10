@@ -9,10 +9,11 @@ services:
     - .:/app
 
   db:
-    image: mysql:8
+    image: mysql
     environment:
-      MYSQL_DB: cybersprout
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: armenat
+      MYSQL_DATABASE: cybersprout
+
     ports:
     - 3306:3306
     volumes:

@@ -48,12 +48,19 @@ use Illuminate\Database\Eloquent\Model;
  * @property int|null $attachment
  * @method static \Database\Factories\PostFactory factory(...$parameters)
  * @method static \Illuminate\Database\Eloquent\Builder|Post whereAttachment($value)
+ * @property-read \App\Models\User $author
  */
 class Post extends Model
 {
     use HasFactory;
 
     protected $guarded = [];
+
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'author_id');
+    }
 
     public function comments()
     {

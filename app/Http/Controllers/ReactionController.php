@@ -112,6 +112,8 @@ class ReactionController extends Controller
     {
         if (CommentReaction::where('comment_id', $entityId)->where('user_id', auth()->user()->id)->exists()) {
             CommentReaction::where('comment_id', $entityId)->where('user_id', auth()->user()->id)->delete();
+        } elseif (PostReaction::where('post_id', $entityId)->where('user_id', auth()->user()->id)->exists()) {
+            PostReaction::where('post_id', $entityId)->where('user_id', auth()->user()->id)->delete();
         } else {
             return response([
                 'message' => 'reaction doesn\'t exist'

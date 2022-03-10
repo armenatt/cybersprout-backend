@@ -48,8 +48,7 @@ Route::prefix('quicknews')->group(function () {
  */
 Route::prefix('/posts')->group(function () {
     // get comments by post id
-    Route::get('/{postId}/comments', [CommentController::class, 'show']);
-    Route::get('/{postId}/comments/{parentCommentId}', [CommentController::class, 'showReplies']);
+    Route::get('/{postId}/comments', [CommentController::class, 'index']);
     Route::middleware('auth:api')->group(function () {
         Route::middleware('CheckRole:user')->group(function () {
             Route::post('/{postId}/comments', [CommentController::class, 'store']);
