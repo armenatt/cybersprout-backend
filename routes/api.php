@@ -64,18 +64,18 @@ Route::prefix('/posts')->group(function () {
 Route::prefix('/reaction')->group(function () {
     //comments
     Route::prefix('/comment')->group(function () {
-        Route::get('/{commentId}', [ReactionController::class, 'commentReactionsShow']);
+        Route::get('/{commentId}', [ReactionController::class, 'indexComment']);
         Route::middleware('auth:api')->group(function () {
             Route::middleware('CheckRole:user')->group(function () {
                 Route::delete('/{entityId}', [ReactionController::class, 'reactionDestroy']);
-                Route::post('/{commentId}', [ReactionController::class, 'commentReactionStore']);
+                Route::post('/{commentId}', [ReactionController::class, 'store']);
             });
         });
     });
 
     //posts
     Route::prefix('/post')->group(function () {
-        Route::get('/{postId}', [ReactionController::class, 'postReactionsShow']);
+        Route::get('/{postId}', [ReactionController::class, 'indexPost']);
         Route::middleware('auth:api')->group(function () {
             Route::middleware('CheckRole:user')->group(function () {
                 Route::delete('/{entityId}', [ReactionController::class, 'reactionDestroy']);

@@ -24,7 +24,8 @@ class ReactionRequest extends FormRequest
     public function rules()
     {
         return [
-            'reaction' => 'required|boolean'
+            'reaction' => 'required|boolean',
+            'reactionable_type' => 'required'
         ];
     }
 }

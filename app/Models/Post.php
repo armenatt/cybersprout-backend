@@ -66,9 +66,15 @@ class Post extends Model
     {
         return $this->hasMany(Comment::class);
     }
+//legacy
+//    public function reactions()
+//    {
+//        return $this->hasMany(PostReaction::class, 'post_id');
+//    }
 
     public function reactions()
     {
-        return $this->hasMany(PostReaction::class, 'post_id');
+        return $this->morphMany(Reaction::class, 'reactionable');
     }
+
 }

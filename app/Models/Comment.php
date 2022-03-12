@@ -73,10 +73,14 @@ class Comment extends Model
     {
         return $query->whereNull('parent_id');
     }
-
+//legacy
+//    public function reactions()
+//    {
+//        return $this->hasMany(CommentReaction::class);
+//    }
     public function reactions()
     {
-        return $this->hasMany(CommentReaction::class);
+        return $this->morphMany(Reaction::class, 'reactionable');
     }
 
     public function children()
