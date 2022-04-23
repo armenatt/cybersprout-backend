@@ -60,28 +60,42 @@ Route::prefix('/posts')->group(function () {
 
 });
 
-/* Reaction urls */
-Route::prefix('/reaction')->group(function () {
-    //comments
-    Route::prefix('/comment')->group(function () {
-        Route::get('/{commentId}', [ReactionController::class, 'indexComment']);
-        Route::middleware('auth:api')->group(function () {
-            Route::middleware('CheckRole:user')->group(function () {
-                Route::delete('/{entityId}', [ReactionController::class, 'reactionDestroy']);
-                Route::post('/{commentId}', [ReactionController::class, 'store']);
-            });
-        });
-    });
+///* Reaction urls */
+//Route::prefix('/reactions')->group(function () {
+//    //comments
+//    Route::prefix('/comments')->group(function () {
+//
+//        Route::get('/{commentId}', [ReactionController::class, 'indexComment']);
+//
+//
+//    });
+//
+//    //posts
+//    Route::prefix('/posts')->group(function () {
+//
+//        Route::get('/{postId}', [ReactionController::class, 'indexPost']);
+//
+//
+//    });
+//    // common
+//    Route::middleware('auth:api')->group(function () {
+//        Route::prefix('/entities')->middleware('CheckRole:user')->group(function () {
+//            Route::post('/{entityId}', [ReactionController::class, 'store']);
+//            Route::delete('/{entityId}', [ReactionController::class, 'destroy']);
+//
+//        });
+//    });
+//
+//});
 
-    //posts
-    Route::prefix('/post')->group(function () {
-        Route::get('/{postId}', [ReactionController::class, 'indexPost']);
-        Route::middleware('auth:api')->group(function () {
-            Route::middleware('CheckRole:user')->group(function () {
-                Route::delete('/{entityId}', [ReactionController::class, 'reactionDestroy']);
-                Route::post('/{postId}', [ReactionController::class, 'postReactionStore']);
-            });
-        });
-    });
+//Route::prefix('/posts/')->group(function () {
+//    //post reactions
+//    Route::get('/{post}/reactions', [ReactionController::class, 'indexPost']);
+//    Route::middleware('auth:api')->group(function () {
+//        Route::post('');
+//    });
+//});
 
-});
+Route::get('/{model}/{entityId}/reactions', [ReactionController::class, 'index'])->middleware('auth:api');
+Route::delete('/{model}/{id}/reactions', [ReactionController::class, 'destroy'])->middleware('auth:api');
+

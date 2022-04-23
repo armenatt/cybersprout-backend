@@ -96,4 +96,9 @@ class User extends Authenticatable
         return $this->hasMany(Comment::class);
     }
 
+    public function reactions()
+    {
+        return $this->morphMany(Reaction::class, 'user_id');
+    }
+
 }

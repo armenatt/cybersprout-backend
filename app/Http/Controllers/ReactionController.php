@@ -8,6 +8,8 @@ use App\Models\CommentReaction;
 use App\Models\Post;
 use App\Models\PostReaction;
 use App\Models\Reaction;
+use Illuminate\Http\Request;
+use function Symfony\Component\Translation\t;
 
 
 class ReactionController extends Controller
@@ -127,28 +129,29 @@ class ReactionController extends Controller
 
     public function store(ReactionRequest $reactionRequest, int $entityId)
     {
-        $typePost = Post::class;
-        $typeComment = Comment::class;
+        $types = ['post' => Post::class, 'comment' => Comment::class];
+
         $reactionType = $reactionRequest->reactionable_type;
 
 
-        if ($reactionType == $typePost) {
+        if ($types[$reactionType] == $types['post']) {
 
-            $reaction = Post::find($entityId)->reactions();
+
+            $reaction = Post::findOrFail($entityId)->reactions();
 
             $reaction->updateOrInsert([
                 'reactionable_id' => $entityId,
                 'user_id' => auth()->user()->id,
-            ], ['reaction' => $reactionRequest->reaction, 'reactionable_type' => $typePost, 'created_at' => now()]);
+            ], ['reaction' => $reactionRequest->reaction, 'reactionable_type' => $types['post'], 'created_at' => now()]);
 
-        } elseif ($reactionType == $typeComment) {
+        } elseif ($types[$reactionType] == $types['comment']) {
 
             $reaction = Comment::find($entityId)->reactions();
 
             $reaction->updateOrInsert([
                 'reactionable_id' => $entityId,
                 'user_id' => auth()->user()->id,
-            ], ['reaction' => $reactionRequest->reaction, 'reactionable_type' => $typeComment, 'created_at' => now()]);
+            ], ['reaction' => $reactionRequest->reaction, 'reactionable_type' => $types['comment'], 'created_at' => now()]);
         }
 
         return response([
@@ -156,25 +159,116 @@ class ReactionController extends Controller
         ], 201);
     }
 
-    public function indexPost(int $postId)
+    public function commentStore(ReactionRequest $request, Comment $comment)
     {
-        $post = Post::where('id', $postId)->exists();
-        if (!$post) {
-
+        if (!$comment->exists()) {
             return response([
-                'error' => 'post doesn\'t exist'
-            ], 404);
-        } else {
-            $reactions = Reaction::where('reactionable_id', $postId)->where('reactionable_type', Post::class)->get();
-            $likes = $reactions->where('reaction', 1)->count();
-            $dislikes = $reactions->where('reaction', 0)->count();
-
-            return response([
-                'post_id' => $postId,
-                'likes' => $likes,
-                'dislikes' => $dislikes
+                'error' => 'comment doesn\'t exist'
             ]);
         }
+
+
+    }
+
+    public function indexPost(Post $post)
+    {
+        if (!$post->exists()) {
+            return response([
+                'error' => 'comment doesn\'t exist'
+            ]);
+        }
+
+        $reactions = $post->reactions()->where('reactionable_type', Post::class)->get();
+        $likes = $reactions->where('reaction', 1)->count();
+        $dislikes = $reactions->where('reaction', 0)->count();
+
+        return response([
+            'post_id' => $post->id,
+            'likes' => $likes,
+            'dislikes' => $dislikes
+        ]);
+
+    }
+
+    public function indexComment(Comment $comment)
+    {
+        if (!$comment->exists()) {
+            return response([
+                'error' => 'comment doesn\'t exist'
+            ]);
+        }
+
+
+        $reactions = $comment->reactions()->where('reactionable_type', Comment::class)->get();
+        $likes = $reactions->where('reaction', 1)->count();
+        $dislikes = $reactions->where('reaction', 0)->count();
+
+        return response([
+            'comment_id' => $comment->id,
+            'likes' => $likes,
+            'dislikes' => $dislikes
+        ]);
+
+    }
+
+    public function index(Request $request, $model, $entityId)
+    {
+        $types = ['posts' => Post::class, 'comments' => Comment::class];
+
+
+        if (!in_array($model, array_keys($types))) {
+
+            return response([
+                'error' => 'model not supported'
+            ], 400);
+        }
+        $types[$model] == $types['posts'] ? $model = Post::findOrFail($entityId)->reactions()->get() : $model = Comment::findOrFail($entityId)->reactions()->get();
+
+        $userReaction = 'unauthorized';
+
+        if (auth()->check()) $userReaction = $model->where('user_id', $request->user()->id)->pluck('reaction');
+
+
+        $likes = $model->where('reaction', 1)->count();
+        $dislikes = $model->where('reaction', 0)->count();
+
+
+        return response([
+            'likes' => $likes,
+            'dislikes' => $dislikes,
+            'user_reaction' => $userReaction
+
+        ]);
+
+    }
+
+    public function destroy($model, $id)
+    {
+
+        $allowed = ['posts', 'comments'];
+        $userId = auth()->user()->id;
+        if (!in_array($model, $allowed)) {
+            return response([
+                'error' => 'model doesn\'t exist'
+            ], 400);
+        }
+
+        if ($model == 'posts') {
+            $post = Post::findOrFail($id);
+            $reaction = $post->reactions()->where('user_id', $userId);
+            if (!$reaction->exists()) return response(['error' => 'reaction doesn\'t exist'], 404);
+            $reaction->delete();
+        } elseif ($model == 'comments') {
+            $comment = Comment::findOrFail($id);
+            $reaction = $comment->reactions()->where('user_id', $userId);
+            if (!$reaction->exists()) return response(['error' => 'reaction doesn\'t exist'], 404);
+            $reaction->delete();
+        }
+
+        return response([
+            'success' => 'reaction deleted successfully'
+        ]);
+
 
     }
 }
